@@ -1,4 +1,4 @@
-<?php
+<?php namespace Limonade;
                                                                   
 # ============================================================================ #
 
@@ -61,7 +61,7 @@ define('LIM_START_MICROTIME',   microtime(true));
 define('LIM_SESSION_NAME',      'LIMONADE'.str_replace('.','x',LIMONADE));
 define('LIM_SESSION_FLASH_KEY', '_lim_flash_messages');
 if(function_exists('memory_get_usage'))
-	define('LIM_START_MEMORY',      memory_get_usage());
+  define('LIM_START_MEMORY',      memory_get_usage());
 define('E_LIM_HTTP',            32768);
 define('E_LIM_PHP',             65536);
 define('E_LIM_DEPRECATED',      35000);
@@ -351,7 +351,7 @@ function run($env = null)
   # 1. Set handlers
   # 1.1 Set error handling
   ini_set('display_errors', 1);
-  set_error_handler('error_handler_dispatcher', E_ALL ^ E_NOTICE);
+  set_error_handler('Limonade\error_handler_dispatcher', E_ALL ^ E_NOTICE);
   
   # 1.2 Register shutdown function
   register_shutdown_function('stop_and_exit');
@@ -652,7 +652,7 @@ function error_handler_dispatcher($errno, $errstr, $errfile, $errline)
   if(error_wont_halt_app($errno))
   {
     error_notice($errno, $errstr, $errfile, $errline);
-  	return;
+    return;
   }
   else
   {
@@ -760,7 +760,7 @@ function error_server_error_output($errno, $errstr, $errfile, $errline)
       $is_http_error = http_response_status_is_valid($errno);
       $args = compact('errno', 'errstr', 'errfile', 'errline', 'is_http_error');
       option('views_dir', option('limonade_views_dir'));
-      $html = render('error.html.php', null, $args);	
+      $html = render('error.html.php', null, $args);  
       option('views_dir', option('error_views_dir'));
       return html($html, error_layout(), $args);
     }
@@ -1084,7 +1084,7 @@ function request_uri($env = null)
        $uri = substr($uri, strlen(option('base_uri')));
       }
       if(strpos($uri, '?') !== false) {
-      	$uri = substr($uri, 0, strpos($uri, '?')) . '/';
+        $uri = substr($uri, 0, strpos($uri, '?')) . '/';
       }
     }
     elseif($env['SERVER']['argc'] > 1 && trim($env['SERVER']['argv'][1], '/') != '')
@@ -1832,11 +1832,11 @@ function content_for($name = null, $content = null)
   if(is_null($name) && !is_null($_name))
   {
     set($_name, ob_get_clean());
-    $_name = null;	
+    $_name = null;  
   }
   elseif(!is_null($name) && !isset($content))
   {
-    $_name = $name;	
+    $_name = $name; 
     ob_start();
   }
   elseif(isset($name, $content))
@@ -1867,16 +1867,16 @@ function end_content_for()
  */
 function benchmark()
 {
-	$res = array( 'execution_time' => (microtime(true) - LIM_START_MICROTIME) );
-	if(defined('LIM_START_MEMORY'))
-	{
-		$current_mem_usage     = memory_get_usage();
-		$res['current_memory'] = $current_mem_usage;
-		$res['start_memory']   = LIM_START_MEMORY;
-		$res['average_memory'] = (LIM_START_MEMORY + $current_mem_usage) / 2;
-	}
-	
-	return $res;
+  $res = array( 'execution_time' => (microtime(true) - LIM_START_MICROTIME) );
+  if(defined('LIM_START_MEMORY'))
+  {
+    $current_mem_usage     = memory_get_usage();
+    $res['current_memory'] = $current_mem_usage;
+    $res['start_memory']   = LIM_START_MEMORY;
+    $res['average_memory'] = (LIM_START_MEMORY + $current_mem_usage) / 2;
+  }
+  
+  return $res;
 }
 
 
@@ -2570,8 +2570,8 @@ function file_is_binary($filename)
 /**
  * Return or output file content
  *
- * @return 	string, int
- *				
+ * @return  string, int
+ *        
  **/
 
 function file_read($filename, $return = false)
@@ -2666,18 +2666,18 @@ function filter_var_url($str)
  */
 function limonade_htmlspecialchars_decode($string, $quote_style = ENT_COMPAT)
 {
-	$table = array_flip(get_html_translation_table(HTML_SPECIALCHARS, $quote_style));
-	if($quote_style === ENT_QUOTES)
-		$table['&#039;'] = $table['&#39;'] = '\'';
-	return strtr($string, $table);
+  $table = array_flip(get_html_translation_table(HTML_SPECIALCHARS, $quote_style));
+  if($quote_style === ENT_QUOTES)
+    $table['&#039;'] = $table['&#39;'] = '\'';
+  return strtr($string, $table);
 }
 
 if(!function_exists('htmlspecialchars_decode'))
 {
-	function htmlspecialchars_decode($string, $quote_style = ENT_COMPAT)
-	{
-		return limonade_htmlspecialchars_decode($string, $quote_style);
-	}
+  function htmlspecialchars_decode($string, $quote_style = ENT_COMPAT)
+  {
+    return limonade_htmlspecialchars_decode($string, $quote_style);
+  }
 }
 
 /**
