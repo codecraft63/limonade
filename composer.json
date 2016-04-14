@@ -2,5 +2,10 @@
     "name": "codecraft63/limonade",
     "description": "a PHP micro-framework",
     "homepage": "https://github.com/sofadesign/limonade",
-    "keywords": ["microframework"]
+    "keywords": ["microframework"],
+    "autoload": {
+        "psr-4": {
+            "Limonade\\": "lib/"
+        }
+    }
 }
