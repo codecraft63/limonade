@@ -4,8 +4,6 @@
     "homepage": "https://github.com/sofadesign/limonade",
     "keywords": ["microframework"],
     "autoload": {
-        "psr-4": {
-            "Limonade\\": "lib/"
-        }
+        "files": ["lib/Limonade.php"]
     }
 }
