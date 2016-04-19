@@ -1,5 +1,5 @@
 <?php namespace Limonade;
-                                                                  
+
 # ============================================================================ #
 
 /**
@@ -133,32 +133,18 @@ ini_set('display_errors', 0);
 
 ## SETTING INTERNAL ROUTES _____________________________________________________
 
-dispatch(array("/_lim_css/*.css", array('_lim_css_filename')), 'render_limonade_css');
-  /**
-   * Internal controller that responds to route /_lim_css/*.css
-   *
-   * @access private
-   * @return string
-   */
-  function render_limonade_css()
+dispatch(array("/_lim_css/*.css", array('_lim_css_filename')), function ()
   {
     option('views_dir', file_path(option('limonade_public_dir'), 'css'));
     $fpath = file_path(params('_lim_css_filename').".css");
     return css($fpath, null); // with no layout
-  }
+  });
 
-dispatch(array("/_lim_public/**", array('_lim_public_file')), 'render_limonade_file');
-  /**
-   * Internal controller that responds to route /_lim_public/**
-   *
-   * @access private
-   * @return void
-   */
-  function render_limonade_file()
+dispatch(array("/_lim_public/**", array('_lim_public_file')), function ()
   {
     $fpath = file_path(option('limonade_public_dir'), params('_lim_public_file'));
     return render_file($fpath, true);
-  }
+  });
 
 
 
@@ -660,7 +646,7 @@ function error_handler_dispatcher($errno, $errstr, $errfile, $errline)
     static $handlers = array();
     if(empty($handlers))
     {
-      error(E_LIM_PHP, 'error_default_handler');
+      error(E_LIM_PHP, 'Limonade\error_default_handler');
       $handlers = error();
     }
     
@@ -1504,7 +1490,7 @@ function html($content_or_func, $layout = '', $locals = array())
 {
   send_header('Content-Type: text/html; charset='.strtolower(option('encoding')));
   $args = func_get_args();
-  return call_user_func_array('render', $args);
+  return call_user_func_array('Limonade\render', $args);
 }
 
 /**
@@ -1532,7 +1518,7 @@ function xml($data)
 {
   send_header('Content-Type: text/xml; charset='.strtolower(option('encoding')));
   $args = func_get_args();
-  return call_user_func_array('render', $args);
+  return call_user_func_array('Limonade\render', $args);
 }
 
 /**
@@ -1547,7 +1533,7 @@ function css($content_or_func, $layout = '', $locals = array())
 {
   send_header('Content-Type: text/css; charset='.strtolower(option('encoding')));
   $args = func_get_args();
-  return call_user_func_array('render', $args);
+  return call_user_func_array('Limonade\render', $args);
 }
 
 /**
@@ -1562,7 +1548,7 @@ function js($content_or_func, $layout = '', $locals = array())
 {
   send_header('Content-Type: application/javascript; charset='.strtolower(option('encoding')));
   $args = func_get_args();
-  return call_user_func_array('render', $args);
+  return call_user_func_array('Limonade\render', $args);
 }
 
 /**
@@ -1577,7 +1563,7 @@ function txt($content_or_func, $layout = '', $locals = array())
 {
   send_header('Content-Type: text/plain; charset='.strtolower(option('encoding')));
   $args = func_get_args();
-  return call_user_func_array('render', $args);
+  return call_user_func_array('Limonade\render', $args);
 }
 
 /**
@@ -1905,6 +1891,8 @@ function call_if_exists($callback)
 {
   $args = func_get_args();
   $callback = array_shift($args);
+  if(is_callable($callback)) return call_user_func_array($callback, $args);
+  $callback = '\\Limonade\\' . $callback;
   if(is_callable($callback)) return call_user_func_array($callback, $args);
   return;
 }
