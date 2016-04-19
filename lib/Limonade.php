@@ -2106,7 +2106,7 @@ function redirect_to($params)
       }
       $n_params[] = $param;
     }
-    $uri = call_user_func_array('url_for', $n_params);
+    $uri = call_user_func_array('Limonade\url_for', $n_params);
     $uri = htmlspecialchars_decode($uri, ENT_NOQUOTES);
     stop_and_exit(false);
     send_header('Location: '.$uri, true, $status);
