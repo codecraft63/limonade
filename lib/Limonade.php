@@ -697,7 +697,7 @@ function error_default_handler($errno, $errstr, $errfile, $errline)
  */
 function error_not_found_output($errno, $errstr, $errfile, $errline)
 {
-  if(!function_exists('not_found'))
+  if(!function_exists('\Limonade\not_found'))
   {
     /**
      * Default not found error output
