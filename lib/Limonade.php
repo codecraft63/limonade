@@ -340,7 +340,7 @@ function run($env = null)
   set_error_handler('Limonade\error_handler_dispatcher', E_ALL ^ E_NOTICE);
   
   # 1.2 Register shutdown function
-  register_shutdown_function('stop_and_exit');
+  register_shutdown_function('Limonade\stop_and_exit');
 
   # 2. Set user configuration
   call_if_exists('configure');
@@ -659,7 +659,7 @@ function error_handler_dispatcher($errno, $errstr, $errfile, $errline)
         if($ee == $errno || $ee == E_LIM_PHP || ($ee == E_LIM_HTTP && $is_http_err))
         {
           echo call_if_exists($handler['function'], $errno, $errstr, $errfile, $errline);
-          exit;
+          // exit;
         }
       }
     }
